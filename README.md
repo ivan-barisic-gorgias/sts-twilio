@@ -34,12 +34,6 @@ pip install -r requirements.txt
 ```
 
 If your TwiML Bin is setup correctly, you should be able to just run the server with:
-
-```
-pip install -r requirements.txt
-```
-
-If your TwiML Bin is setup correctly, you should be able to just run the server with:
 ```bash
 python server.py
 ```
