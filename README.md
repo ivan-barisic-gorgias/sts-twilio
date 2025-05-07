@@ -4,6 +4,10 @@ sts-twilio is a server which enables calls made to your Twilio phone number to p
 
 See the following [Guide in our Documentation](https://developers.deepgram.com/docs/twilio-and-deepgram-voice-agent) for more information.
 
+## What is Deepgram?
+
+[Deepgram's](https://deepgram.com/) voice AI platform provides APIs for speech-to-text, text-to-speech, and full speech-to-speech voice agents. Over 200,000+ developers use Deepgram to build voice AI products and features.
+
 ## Pre-requisites
 
 You will need:
@@ -29,11 +33,20 @@ This `TwiML Bin` must also be [connected to one of your Twilio phone numbers](ht
 
 Install requirements:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
+## Set your Deepgram API Key
+
+In your terminal run:
+
+```bash
+export DEEPGRAM_API_KEY "Your key here"
+```
+
 If your TwiML Bin is setup correctly, you should be able to just run the server with:
+
 ```bash
 python server.py
 ```
@@ -42,3 +55,14 @@ and then start making calls to the phone number the TwiML Bin is attached to!
 ## Code Tour
 
 For a guided tour of the code, see the following [Guide in our Documentation](https://developers.deepgram.com/docs/twilio-and-deepgram-voice-agent).
+
+
+## Getting Help
+
+- Found a bug? [Create an issue](https://github.com/deepgram-devs/sts-twilio/issues)
+- [Join the Deepgram Github Discussions Community](https://github.com/orgs/deepgram/discussions)
+- [Join the Deepgram Discord Community](https://discord.gg/xWRaCDBtW4)
+
+## Author
+
+[Deepgram](https://deepgram.com)

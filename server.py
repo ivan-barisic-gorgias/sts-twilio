@@ -4,11 +4,18 @@ import json
 import sys
 import websockets
 import ssl
+import os
 
 
 def sts_connect():
+    # you can run export DEEPGRAM_API_KEY="your key" in your terminal to set your API key.
+    api_key = os.getenv('DEEPGRAM_API_KEY')
+    if not api_key:
+        raise ValueError("DEEPGRAM_API_KEY environment variable is not set")
+
     sts_ws = websockets.connect(
-    "wss://agent.deepgram.com/agent", subprotocols=["token", "YOUR_DEEPGRAM_API_KEY"]
+        "wss://agent.deepgram.com/v1/agent/converse",
+        subprotocols=["token", api_key]
     )
     return sts_ws
 
@@ -19,7 +26,7 @@ async def twilio_handler(twilio_ws):
 
     async with sts_connect() as sts_ws:
         config_message = {
-            "type": "SettingsConfiguration",
+            "type": "Settings",
             "audio": {
                 "input": {
                     "encoding": "mulaw",
@@ -32,16 +39,30 @@ async def twilio_handler(twilio_ws):
                 },
             },
             "agent": {
-                "listen": {"model": "nova-2"},
+                "language": "en",
+                "listen": {
+                    "provider": {
+                        "type": "deepgram",
+                        "model": "nova-3",
+                        "keyterms": ["hello", "goodbye"]
+                    }
+                },
                 "think": {
                     "provider": {
-                        "type": "anthropic",
+                        "type": "open_ai",
+                        "model": "gpt-4o-mini",
+                        "temperature": 0.7
                     },
-                    "model": "claude-3-haiku-20240307",
-                    "instructions": "You are a helpful car seller.",
+                    "prompt": "You are a helpful AI assistant focused on customer service."
                 },
-                "speak": {"model": "aura-asteria-en"},
-            },
+                "speak": {
+                    "provider": {
+                        "type": "deepgram",
+                        "model": "aura-2-thalia-en"
+                    }
+                },
+                "greeting": "Hello! How can I help you today?"
+            }
         }
 
         await sts_ws.send(json.dumps(config_message))
