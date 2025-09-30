@@ -50,8 +50,8 @@ async def twilio_handler(twilio_ws):
                 "think": {
                     "provider": {
                         "type": "open_ai",
-                        "model": "gpt-4o-mini",
-                        "temperature": 0.7
+                        "model": "gpt-4.1-nano",
+                        "temperature": 0.3
                     },
                     "prompt": "You are a helpful AI assistant focused on customer service."
                 },
