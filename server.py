@@ -5,6 +5,8 @@ import sys
 import websockets
 import ssl
 import os
+from function_handlers import handle_function_call
+from agent_config import AUDIO_SETTINGS, AGENT_SETTINGS
 
 
 def sts_connect():
@@ -27,42 +29,8 @@ async def twilio_handler(twilio_ws):
     async with sts_connect() as sts_ws:
         config_message = {
             "type": "Settings",
-            "audio": {
-                "input": {
-                    "encoding": "mulaw",
-                    "sample_rate": 8000,
-                },
-                "output": {
-                    "encoding": "mulaw",
-                    "sample_rate": 8000,
-                    "container": "none",
-                },
-            },
-            "agent": {
-                "language": "en",
-                "listen": {
-                    "provider": {
-                        "type": "deepgram",
-                        "model": "nova-3",
-                        "keyterms": ["hello", "goodbye"]
-                    }
-                },
-                "think": {
-                    "provider": {
-                        "type": "open_ai",
-                        "model": "gpt-4.1-nano",
-                        "temperature": 0.3
-                    },
-                    "prompt": "You are a helpful AI assistant focused on customer service."
-                },
-                "speak": {
-                    "provider": {
-                        "type": "deepgram",
-                        "model": "aura-2-thalia-en"
-                    }
-                },
-                "greeting": "Hello! How can I help you today?"
-            }
+            "audio": AUDIO_SETTINGS,
+            "agent": AGENT_SETTINGS
         }
 
         await sts_ws.send(json.dumps(config_message))
@@ -89,6 +57,39 @@ async def twilio_handler(twilio_ws):
                             "streamSid": streamsid
                         }
                         await twilio_ws.send(json.dumps(clear_message))
+
+                    # handle function calls
+                    elif decoded['type'] == 'FunctionCallRequest':
+                        print(f"[DEEPGRAM] Received FunctionCallRequest: {decoded}")
+
+                        for function in decoded.get('functions', []):
+                            function_id = function.get('id')
+                            function_name = function.get('name')
+                            arguments_str = function.get('arguments', '{}')
+
+                            # Handle the function call
+                            result, error = handle_function_call(function_name, arguments_str)
+
+                            # Send response back to Deepgram
+                            if result is not None:
+                                response = {
+                                    "type": "FunctionCallResponse",
+                                    "id": function_id,
+                                    "name": function_name,
+                                    "content": json.dumps(result)
+                                }
+                                await sts_ws.send(json.dumps(response))
+                                print(f"[DEEPGRAM] Sent FunctionCallResponse: {response}")
+                            else:
+                                # Send error response if function call failed
+                                error_response = {
+                                    "type": "FunctionCallResponse",
+                                    "id": function_id,
+                                    "name": function_name,
+                                    "content": json.dumps({"success": False, "error": error})
+                                }
+                                await sts_ws.send(json.dumps(error_response))
+                                print(f"[DEEPGRAM] Sent error FunctionCallResponse: {error_response}")
 
                     continue
 
@@ -167,8 +168,8 @@ def main():
     # server = websockets.serve(router, '0.0.0.0', 443, ssl=ssl_context)
 
     # use this if not using ssl
-    server = websockets.serve(router, "localhost", 5000)
-    print("Server starting on ws://localhost:5000")
+    server = websockets.serve(router, "0.0.0.0", 5001)
+    print("Server starting on ws://0.0.0.0:5001")
 
     asyncio.get_event_loop().run_until_complete(server)
     asyncio.get_event_loop().run_forever()
