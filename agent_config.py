@@ -104,8 +104,8 @@ AGENT_SETTINGS = {
     "think": {
         "provider": {
             "type": "open_ai",
-            "model": "gpt-4.1-nano",
-            "temperature": 0.5,
+            "model": "gpt-4.1-mini",
+            "temperature": 0.6,
         },
         "functions": FUNCTION_DEFINITIONS,
         "prompt": AGENT_PROMPT
