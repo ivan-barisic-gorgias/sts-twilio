@@ -8,7 +8,7 @@ CUSTOMERS = {
         "customer_id": "CUST001",
         "name": "Alice Johnson",
         "email": "customer@example.com",
-        "phone": "+1-555-0123",
+        "phone": "+15550123",
         "address": "123 Main St, San Francisco, CA 94102",
         "status": "active"
     },
@@ -16,7 +16,7 @@ CUSTOMERS = {
         "customer_id": "CUST002",
         "name": "John Doe",
         "email": "john.doe@example.com",
-        "phone": "+1-555-0456",
+        "phone": "+15550456",
         "address": "456 Oak Ave, New York, NY 10001",
         "status": "active"
     },
@@ -24,7 +24,7 @@ CUSTOMERS = {
         "customer_id": "CUST003",
         "name": "Sarah Smith",
         "email": "sarah.smith@example.com",
-        "phone": "+1-555-0789",
+        "phone": "+15550789",
         "address": "789 Pine Rd, Austin, TX 78701",
         "status": "active"
     }

@@ -22,13 +22,13 @@ Be conversational, friendly, and helpful. If a customer asks about their order w
 FUNCTION_DEFINITIONS = [
     {
         "name": "get_customer_by_email",
-        "description": "Retrieve customer information by their email address. Use this to verify customer identity when they provide their email. Format the email in the correct format (e.g. first.last@example.com).",
+        "description": "Retrieve customer information by their email address. Use this to verify customer identity when they provide their email. Format the email in the correct format when passing it to the function (e.g. first.last@example.com).",
         "parameters": {
             "type": "object",
             "properties": {
                 "email": {
                     "type": "string",
-                    "description": "The customer's email address"
+                    "description": "The customer's email address, formatted as first.last@example.com"
                 }
             },
             "required": ["email"]
@@ -42,7 +42,7 @@ FUNCTION_DEFINITIONS = [
             "properties": {
                 "phone": {
                     "type": "string",
-                    "description": "The customer's phone number"
+                    "description": "The customer's phone number, formatted as +15550123"
                 }
             },
             "required": ["phone"]
@@ -56,7 +56,7 @@ FUNCTION_DEFINITIONS = [
             "properties": {
                 "order_id": {
                     "type": "string",
-                    "description": "The unique order identifier"
+                    "description": "The unique order identifier, formatted as ORDXXX (capital letters, 3 digits, no spaces)"
                 }
             },
             "required": ["order_id"]
